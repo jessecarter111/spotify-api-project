@@ -2,14 +2,15 @@ import React from 'react'
 import Track from '../Track/Track'
 
 const Tracklist = (props) => {
-    const tracksToRender = props.searchResults ? props.searchResults : props.playlistTracks
 
     return (
         <div className="TrackList">
-            {tracksToRender.map(track => { return (
+            {props.tracks.map(track => { return (
                 <div>     
                     <Track trackInfo={track}
                         onAdd={props.onAdd}
+                        onRemove={props.onRemove}
+                        isRemoval={props.isRemoval}
                         key={track.id}/>
                 </div>
             )})}

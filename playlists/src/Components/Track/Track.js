@@ -2,18 +2,27 @@ import React from 'react'
 import './Track.css'
 const Track = (props) => {
     const trackInfo = props.trackInfo
-    
+
     const renderAction = (isRemoval) => {
         if (isRemoval) {
-            return '-'
+            return (
+                <button className="Track-action" onClick={removeTrack}>
+                        -
+                </button>)
         } else {
-            return '+'
+            return (
+                <button className="Track-action" onClick={addTrack}>
+                        +
+                </button>)
         }
     }
 
     const addTrack = () => {
-        // console.log("addTrack in Track.js:",trackInfo)
         props.onAdd(trackInfo)
+    }
+
+    const removeTrack = () => {
+        props.onRemove(trackInfo)
     }
 
     return (
@@ -22,10 +31,7 @@ const Track = (props) => {
             <h3>{trackInfo.name}</h3>
             <p>{trackInfo.artist} | {trackInfo.album}</p>
         </div>
-            <button className="Track-action"
-                onClick={addTrack}>
-                    {renderAction(props.isRemoval)}
-            </button>
+            {renderAction(props.isRemoval)}
         </div>
     )
 }
