@@ -5,15 +5,10 @@ import Playlist from '../Playlist/Playlist';
 import SearchBar from '../SearchBar/SearchBar'
 import Spotify from '../../util/Spotify'
 
-const App = (props) => {
+const App = () => {
   const [searchTerm, setSearchTerm] = useState('')
-  const [searchResults, setSearchResults] = useState([
-    {name: 'Bob\'s Ballad', artist: 'TinyBob', album: 'Tiny Bob\'s Tiny Shiners', id: 1},
-    {name: 'Bayou Bob', artist: 'TinyBob', album: 'Tiny Bob\'s Tiny Shiners', id: 2},
-    {name: 'One Bob Short of Love', artist: 'TinyBob', album: 'Tiny Bob\'s Tiny Shiners', id: 3},
-    {name: 'Bet My Last Bob on You', artist: 'TinyBob', album: 'Tiny Bob\'s Tiny Shiners', id: 4},
-  ])
-  const [playlistName, setPlayListName] = useState('Bob\s Fucking Bangers')
+  const [searchResults, setSearchResults] = useState([])
+  const [playlistName, setPlayListName] = useState('')
   const [playlistTracks, setPlaylistTracks] = useState([])
   
   const addTrack = (track) => {
@@ -28,17 +23,20 @@ const App = (props) => {
     setPlayListName(newPlaylistName)
   }
 
-  const savePlaylist = () => {
-    const trackURIs = playlistTracks.map(track => track.uri)
+  const savePlaylist = async () => {
+    const userID = await Spotify.getUserID()
+    const playlistID = await Spotify.savePlaylist(userID, playlistName)
+    const trackURIs = playlistTracks.map(track => track.URI)
+    Spotify.addTracksToPlaylist(playlistID, trackURIs)
+    window.alert(`Success, ${playlistName} saved!`)
   }
 
-  const search = () => {
+  const search = async () => {
     Spotify.getAccessToken()
     Spotify.search(searchTerm).then((result) => {
         setSearchResults(result)
       }
     )
-    console.log(searchResults)
   }
 
   const updateSearchTerm = (newSearchTerm) => {
