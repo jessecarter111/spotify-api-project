@@ -3,6 +3,7 @@ import './App.css';
 import SearchResults from '../SearchResults/SearchResults'
 import Playlist from '../Playlist/Playlist';
 import SearchBar from '../SearchBar/SearchBar'
+import Spotify from '../../util/Spotify'
 
 const App = (props) => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -27,10 +28,17 @@ const App = (props) => {
     setPlayListName(newPlaylistName)
   }
 
-  //ToDo ===> Set up a Save Playlist method after API access is obtained
+  const savePlaylist = () => {
+    const trackURIs = playlistTracks.map(track => track.uri)
+  }
 
   const search = () => {
-    console.log(searchTerm)
+    Spotify.getAccessToken()
+    Spotify.search(searchTerm).then((result) => {
+        setSearchResults(result)
+      }
+    )
+    console.log(searchResults)
   }
 
   const updateSearchTerm = (newSearchTerm) => {
@@ -44,8 +52,11 @@ const App = (props) => {
         <SearchBar onSearch={search} searchTerm={searchTerm} updateSearchTerm={updateSearchTerm}/>
         <div className="App-playlist">
           <SearchResults searchResults={searchResults} onAdd={addTrack}/>
-          <Playlist playlistName={playlistName} playlistTracks={playlistTracks} 
-            onRemove={removeTrack} updatePlaylistName={updatePlaylistName} />
+          <Playlist playlistName={playlistName} 
+            playlistTracks={playlistTracks} 
+            onRemove={removeTrack} 
+            updatePlaylistName={updatePlaylistName}
+            savePlaylist={savePlaylist}/>
         </div>
       </div>
     </div>
